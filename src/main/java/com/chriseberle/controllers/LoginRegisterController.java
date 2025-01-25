@@ -1,5 +1,4 @@
 package com.chriseberle.controllers;
-
 import com.chriseberle.utils.SceneManager;
 
 import javafx.event.ActionEvent;
@@ -16,6 +15,7 @@ public class LoginRegisterController {
      */
     @FXML
     private Button loginButton;
+    @FXML
     private Button registerButton;
     
     /**

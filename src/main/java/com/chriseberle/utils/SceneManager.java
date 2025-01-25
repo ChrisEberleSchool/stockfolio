@@ -44,7 +44,6 @@ public class SceneManager {
         finally {
             System.out.println("[LOADED] Scene: " + name);
         }
-        
     }
 
     /**
