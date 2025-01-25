@@ -1,3 +1,7 @@
-com/chriseberle/applications/LauncherApp.class
+com/chriseberle/views/MainView.class
+com/chriseberle/controllers/LoginRegisterController.class
+com/chriseberle/controllers/RegisterController.class
+com/chriseberle/views/LauncherView.class
+com/chriseberle/controllers/LoginController.class
+com/chriseberle/utils/SceneManager.class
 com/chriseberle/App.class
-com/chriseberle/controllers/Controller0.class
