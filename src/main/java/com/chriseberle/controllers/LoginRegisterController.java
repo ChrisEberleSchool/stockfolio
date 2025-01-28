@@ -25,6 +25,7 @@ public class LoginRegisterController {
      */
     public void login(ActionEvent e) {
         System.out.println("[CLICKED] Login button.");
+        SceneManager.switchScene("Login");
     }
 
     /**

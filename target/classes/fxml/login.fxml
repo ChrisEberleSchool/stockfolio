@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chriseberle.controllers.LoginController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="252.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="369.0" minWidth="10.0" prefWidth="348.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" style="-fx-background-color: #5BA24B;">
+         <children>
+            <Label text="Stockfolio" textFill="#76b967">
+               <font>
+                  <Font name="Baloo Bhaina 2 ExtraBold" size="48.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <GridPane GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="111.0" minWidth="10.0" prefWidth="54.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="191.0" minWidth="10.0" prefWidth="56.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="10.0" prefWidth="236.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ImageView fitHeight="154.0" fitWidth="64.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.33" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <image>
+                  <Image url="@../icons/user.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="69.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.33" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <image>
+                  <Image url="@../icons/lock.png" />
+               </image>
+            </ImageView>
+            <TextField fx:id="usernameField" maxWidth="180.0" prefWidth="180.0" promptText="Username" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <PasswordField fx:id="passwordField" maxWidth="180.0" prefWidth="180.0" promptText="New Password" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="loginButton" mnemonicParsing="false" onAction="#login" opacity="0.8" text="Login" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+               <font>
+                  <Font name="Baloo Bhai 2 SemiBold" size="14.0" />
+               </font>
+               <effect>
+                  <Blend />
+               </effect>
+            </Button>
+            <ImageView fx:id="userStatusImageView" fitHeight="164.0" fitWidth="64.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.33" scaleZ="0.33" GridPane.rowIndex="2" />
+            <ImageView fx:id="passwordStatusImageView" fitHeight="164.0" fitWidth="64.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" scaleX="0.33" scaleY="0.33" scaleZ="0.33" GridPane.rowIndex="3" />
+         </children>
+      </GridPane>
+   </children>
+</GridPane>
