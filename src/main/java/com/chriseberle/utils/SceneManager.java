@@ -27,6 +27,7 @@ public class SceneManager {
         // Preload scenes
         loadScene("loginRegister", "/fxml/loginRegister.fxml");
         loadScene("Register", "/fxml/register.fxml");
+        loadScene("Login", "/fxml/login.fxml");
     }
     /**
      * Load a scene from an FXML file.

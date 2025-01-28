@@ -3,6 +3,9 @@ package com.chriseberle.controllers;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.chriseberle.utils.ForumHelper;
+import com.chriseberle.utils.SceneManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -60,7 +63,7 @@ public class RegisterController {
         // EMAIL LISTENER
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (isValidEmail(newValue)) {
+            if (ForumHelper.validEmail(newValue)) {
                 // set the status image to check
                 setStatusImage(emailStatusImageView, true);
             } else {
@@ -73,7 +76,7 @@ public class RegisterController {
         // USER LISTENER
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (isValidUser(newValue)) {
+            if (ForumHelper.validUserername(newValue)) {
                 // set the status image to check
                 setStatusImage(userStatusImageView, true);
             } else {
@@ -86,7 +89,7 @@ public class RegisterController {
         // PASSWORD LISTENER
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (isValidPassword(newValue)) {
+            if (ForumHelper.validPassword(newValue)) {
                 // set the status image to check
                 setStatusImage(passwordStatusImageView, true);
             } else {
@@ -99,7 +102,7 @@ public class RegisterController {
         // RETYPE PASSWORD LISTENER
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (isMatchingPassword(newValue, passwordField.getText())) {
+            if (ForumHelper.validPasswordMatch(newValue, passwordField.getText())) {
                 // set the status image to check
                 setStatusImage(retypePasswordStatusImageView, true);
             } else {
@@ -126,10 +129,10 @@ public class RegisterController {
          * fields are null or corruption occurs.
          */
         try {
-            if( isValidEmail(emailField.getText()) && 
-                isValidUser(usernameField.getText()) && 
-                isValidPassword(passwordField.getText()) && 
-                isMatchingPassword(passwordField.getText(), confirmPasswordField.getText()) 
+            if( ForumHelper.validEmail(emailField.getText()) && 
+            ForumHelper.validUserername(usernameField.getText()) && 
+            ForumHelper.validPassword(passwordField.getText()) && 
+            ForumHelper.validPasswordMatch(passwordField.getText(), confirmPasswordField.getText()) 
               ) 
             { // if so print the success message
                 System.out.println("Successfully Registered user: " + usernameField.getText());
@@ -140,55 +143,6 @@ public class RegisterController {
         catch (Exception err) {
             System.out.println("[ERROR] COuld not register: " + err);
         }
-    }
-
-    /**
-     * This method checks if the email matches a valid pattern.
-     *
-     * @param email The email to check.
-     * @return true if the email matches a valid pattern, false otherwise.
-     */
-    private boolean isValidEmail(String email) {
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
-        Matcher matcher = pattern.matcher(email);
-        return matcher.matches();
-    }
-
-    /**
-     * This method checks if the user matches the valid pattern.
-     *
-     * @param user The user to check.
-     * @return true if the user matches a valid pattern, false otherwise.
-     */
-    private boolean isValidUser(String user) {
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9-_]{4,15}$");
-        Matcher matcher = pattern.matcher(user);
-        return matcher.matches();
-    }
-
-    /**
-     * This method checks if the password matches the valid pattern.
-     *
-     * @param user The password to check.
-     * @return true if the password matches a valid pattern, false otherwise.
-     */
-    private boolean isValidPassword(String user) {
-        Pattern pattern = Pattern.compile("^[\\S]{4,15}$");
-        Matcher matcher = pattern.matcher(user);
-        return matcher.matches();
-    }
-
-    /**
-     * This method checks if the password matches the retype password
-     *
-     * @param pass        The password to check.
-     * @param passConfirm The confirm password to check.
-     * @return true if the passwords match, false otherwise.
-     */
-    private boolean isMatchingPassword(String pass, String passConfirm) {
-        return (pass.equals(passConfirm) && 
-                isValidPassword(pass)) 
-                ? true : false;
     }
 
     /**
