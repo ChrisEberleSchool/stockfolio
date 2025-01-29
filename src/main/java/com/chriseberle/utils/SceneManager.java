@@ -7,27 +7,43 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 public class SceneManager {
+
     /**
      * The primary stage.
      */
     private static Stage primaryStage;
+
     /**
      * A map of scenes.
      */
     private static HashMap<String, Scene> sceneMap = new HashMap<>();
 
     /**
+     * The current scene.
+     */
+    private static Scene currentScene;
+
+    /**
+     * The entry scene.
+     */
+    private static String entrySceneKey;
+
+    /**
      * Initialize the SceneManager with the primary stage.
      * @param stage the primary stage
      */
     public static void init(Stage stage) {
+        // set the class specific stage instance to the primary stage
         primaryStage = stage;
-        primaryStage.setResizable(false);
-
+    
         // Preload scenes
         loadScene("loginRegister", "/fxml/loginRegister.fxml");
         loadScene("Register", "/fxml/register.fxml");
         loadScene("Login", "/fxml/login.fxml");
+        loadScene("Home", "/fxml/homePage.fxml");
+
+        // set the entry scene, the scene that will be displayed first
+        entrySceneKey = "loginRegister";
     }
     /**
      * Load a scene from an FXML file.
@@ -52,12 +68,36 @@ public class SceneManager {
      * @param name the name of the scene
      */
     public static void switchScene(String name) {
-        Scene scene = sceneMap.get(name);
-        if(scene != null) {
-            primaryStage.setScene(scene);
+        currentScene = sceneMap.get(name);
+        if(currentScene != null) {
+            primaryStage.setScene(currentScene);
             primaryStage.show();
         } else {
             throw new RuntimeException("[ERROR] Scene not found: " + name);
         }
+    }
+
+    /**
+     * Get the current scene.
+     * @return the current scene
+     */
+    public static Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    /**
+     * Get the current scene.
+     * @return the current scene
+     */
+    public static Scene getCurrentScene() {
+        return currentScene;
+    }
+
+    /**
+     * Get the entry scene.
+     * @return the current scene
+     */
+    public static String getEntrySceneKey() {
+        return entrySceneKey;
     }
 }

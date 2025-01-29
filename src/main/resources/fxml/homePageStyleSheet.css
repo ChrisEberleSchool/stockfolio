@@ -1,0 +1,25 @@
+.parent {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 30px;
+}
+
+.sidebar {
+    -fx-background-color: #5ba24bb1;
+    -fx-background-radius: 10px 10px 10px 10px;
+}
+
+.sidebar_opt {
+    -fx-fill: #f3f3f3;
+    -fx-opacity: 0.5;
+}
+
+.pane {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0px 0px 30px 30px;
+}
+
+.colored_portfolio
+{
+    -fx-background-color: linear-gradient(to right, #57cb3c,#71906a);
+    -fx-background-radius: 10px;
+}
