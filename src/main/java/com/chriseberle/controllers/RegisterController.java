@@ -1,11 +1,6 @@
 package com.chriseberle.controllers;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.chriseberle.utils.ForumHelper;
-import com.chriseberle.utils.SceneManager;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -130,9 +125,9 @@ public class RegisterController {
          */
         try {
             if( ForumHelper.validEmail(emailField.getText()) && 
-            ForumHelper.validUserername(usernameField.getText()) && 
-            ForumHelper.validPassword(passwordField.getText()) && 
-            ForumHelper.validPasswordMatch(passwordField.getText(), confirmPasswordField.getText()) 
+                ForumHelper.validUserername(usernameField.getText()) && 
+                ForumHelper.validPassword(passwordField.getText()) && 
+                ForumHelper.validPasswordMatch(passwordField.getText(), confirmPasswordField.getText()) 
               ) 
             { // if so print the success message
                 System.out.println("Successfully Registered user: " + usernameField.getText());

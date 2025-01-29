@@ -1,4 +1,5 @@
 com/chriseberle/utils/ForumHelper.class
+com/chriseberle/controllers/HomeController.class
 com/chriseberle/views/MainView.class
 com/chriseberle/controllers/LoginRegisterController.class
 com/chriseberle/controllers/RegisterController.class
