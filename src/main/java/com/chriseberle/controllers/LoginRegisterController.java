@@ -1,6 +1,5 @@
 package com.chriseberle.controllers;
 import com.chriseberle.utils.SceneManager;
-import com.chriseberle.views.HomeView;
 import com.chriseberle.views.LoginView;
 import com.chriseberle.views.RegisterView;
 
