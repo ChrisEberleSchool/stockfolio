@@ -5,14 +5,19 @@
 
 .sidebar {
     -fx-background-color: #5ba24bb1;
-    -fx-background-radius: 10px 10px 10px 10px;
+    -fx-background-radius: 0px 0px 10px 0px;
 }
 
 .sidebar_opt {
     -fx-fill: #f3f3f3;
     -fx-opacity: 0.5;
+    transition: -fx-fill 0.3s ease, -fx-opacity 0.3s ease;
 }
 
+.sidebar_opt:hover {
+    -fx-fill: #000000; /* Black color */
+    -fx-opacity: 1; /* Optional: change opacity on hover */
+}
 .pane {
     -fx-background-color: #ffffff;
     -fx-background-radius: 0px 0px 30px 30px;

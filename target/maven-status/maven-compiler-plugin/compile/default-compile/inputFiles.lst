@@ -1,9 +1,10 @@
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/controllers/LoginRegisterController.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/controllers/LoginController.java
+/Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/db/H2Database.java
+/Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/db/DBTableMethods/DBUser.java
+/Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/utils/StageManager.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/controllers/RegisterController.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/controllers/HomeController.java
-/Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/views/MainView.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/utils/ForumHelper.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/utils/SceneManager.java
 /Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/App.java
-/Users/chriseberle/Documents/GitHub/stockfolio/src/main/java/com/chriseberle/views/LauncherView.java

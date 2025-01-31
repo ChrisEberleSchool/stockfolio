@@ -2,8 +2,6 @@ package com.chriseberle.controllers;
 
 import com.chriseberle.utils.ForumHelper;
 import com.chriseberle.utils.SceneManager;
-import com.chriseberle.views.HomeView;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -101,7 +99,6 @@ public class LoginController {
             { // if so print the success message
                 System.out.println("Successfully Logged in user: " + usernameField.getText());
                 SceneManager.switchScene("Home");
-                HomeView.setDefaultViewettings(SceneManager.getPrimaryStage());
             } else { // if not print the failure message
                 System.out.println("Failed to login user, Please enter Correct data: " + usernameField.getText());
             }
