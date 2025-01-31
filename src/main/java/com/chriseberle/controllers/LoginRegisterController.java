@@ -1,9 +1,6 @@
 package com.chriseberle.controllers;
-import com.chriseberle.utils.SceneManager;
-import com.chriseberle.views.HomeView;
-import com.chriseberle.views.LoginView;
-import com.chriseberle.views.RegisterView;
 
+import com.chriseberle.utils.SceneManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -29,7 +26,6 @@ public class LoginRegisterController {
     public void login(ActionEvent e) {
         System.out.println("[CLICKED] Login button.");
         SceneManager.switchScene("Login");
-        LoginView.setDefaultViewettings(SceneManager.getPrimaryStage());
     }
 
     /**
@@ -40,6 +36,5 @@ public class LoginRegisterController {
     public void register(ActionEvent e) {
         System.out.println("[CLICKED] Register button.");
         SceneManager.switchScene("Register");
-        RegisterView.setDefaultViewettings(SceneManager.getPrimaryStage());
     }
 }
