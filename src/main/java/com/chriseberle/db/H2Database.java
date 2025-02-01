@@ -1,41 +1,97 @@
 package com.chriseberle.db;
 
 //imports
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import javafx.stage.Stage;
+
 
 /**
  * This class provides methods to interact with an H2 database.
+ * 
+ * 
+ * FORMAT:
+ * 
+ * String JDBC_URL = "jdbc:h2:./target/db/testdb";
+ * String USERNAME = "";
+ * String PASSWORD = "";
  */
 public class H2Database {
 
-    // Database connection details
-    private static final String JDBC_URL = "jdbc:h2:./target/db/testdb";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
+    
+    // sqlFile FORMAT: "db/file.sql" -> this file must be stored at src/main/resources
+    public static void createDatabase(String JDBC_URL, String DB_USERNAME, String DB_PASSWORD, ArrayList<String> sqlFiles)
+     {
+        // check if the target dir has a database dir. (create it if not) 
+        File dbDirectory = new File("./target/db");
+        if (!dbDirectory.exists()) {
+            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
+            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
+        }
 
-    /**
-     * Get a connection to the database.
-     * @return the database connection
-     * @throws SQLException if a database access error occurs
-     */
-    public static Connection getConnection() throws SQLException {
+        // check if the database dir has a JDBC mv.db file. (exit if so) 
+        dbDirectory = new File("./target/db/"+JDBC_URL+".mv.db");
+        if (!dbDirectory.exists()) {
+            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
+            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
+        } else {
+            System.out.println("[SQL] Database Already Exists.");
+            return;
+        }
+
+        // create a temp connection, create a statement
+        Connection connection;
         try {
-            return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+            connection = DriverManager.getConnection(JDBC_URL, DB_USERNAME, DB_PASSWORD);
         }
         catch (SQLException e) {   
-            System.out.println("[ERROR] Failed to connect to the database: " + e.getMessage());
-            // Rethrow the exception to be handled by the caller
-            throw e;  
+            System.out.println("[SQL ERROR] Failed to connect to the database. Database Will Not Created: " + e.getMessage());
+            // exit early if failed to connect to the database
+            return;
         }
+
+        // read in the database
+        try {
+            Statement stmt = connection.createStatement();
+            for (String file : sqlFiles) {
+                executeSqlFile(stmt, file);
+            }   
+        }
+        catch (SQLException e) {   
+            System.out.println("[SQL ERROR] Failed to create database statement. Database Will Not Created: " + e.getMessage());
+            // exit early if failed to create a statement
+            return;
+        }
+        catch (IOException e) {
+            System.out.println("[SQL ERROR] SQL file not found. Database Will Not Created: " + e.getMessage());
+            // exit early if failed to create a statement
+            return;
+        }
+        System.out.println("Database initialized successfully!");
+    }
+
+    public static void shutdownHandlerJavaFX(Connection connection, Stage stage) {
+        // TODO: Shutdown is not working correctly 
+        stage.setOnCloseRequest(event -> {
+            // Close the database connection properly
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("[H2 DB] ERROR: Failed to properly clean database upon termination of JavaFX: -> " + e);
+            }
+        });
     }
 
     /**
@@ -46,7 +102,7 @@ public class H2Database {
      * @param sqlFilePath the path to the SQL file
      * @throws IOException if an I/O error occurs
      */
-    public static void executeSqlFile(Statement stmt, String sqlFilePath) throws SQLException, IOException {
+    private static void executeSqlFile(Statement stmt, String sqlFilePath) throws SQLException, IOException {
         // Ensure that the file path is correct and relative to the resources folder
         InputStream inputStream = H2Database.class.getClassLoader().getResourceAsStream(sqlFilePath);
 
@@ -54,8 +110,6 @@ public class H2Database {
         if (inputStream == null) {
             throw new FileNotFoundException("SQL file not found: " + sqlFilePath);
         }
-
-        // TODO: Check if our tables already exist before executing the SQL file
 
         //check if 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -66,32 +120,7 @@ public class H2Database {
             }
             stmt.execute(sql.toString()); // Execute the SQL commands from the file
         } catch (SQLException e) {
-            System.err.println("[SQL] Table already exists.");
-        }
-    }
-
-    /**
-     * Initialize the database by creating tables and inserting data.
-     */
-    public static void initializeDatabase() {
-        
-        // Check if the target/db directory exists, and create it if not
-        File dbDirectory = new File("./target/db");
-        if (!dbDirectory.exists()) {
-            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
-            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
-        }
-
-        // Initialize the connection and execute setup files
-        try (Connection connection = getConnection()) {
-            Statement stmt = connection.createStatement();
-            
-            // Execute schema.sql (to create tables)
-            executeSqlFile(stmt, "db/stockfolioDDL.sql");
-
-            System.out.println("Database initialized successfully!");
-        } catch (Exception e) {
-            System.out.println("[SQL ERROR] occurred while attempting to initialize the database. [MSG] -> " + e.getMessage());
+            System.err.println("[SQL] SQL file already exists. Ignoring new Creation.");
         }
     }
 }

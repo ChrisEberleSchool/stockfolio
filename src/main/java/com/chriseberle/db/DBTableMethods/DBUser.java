@@ -31,7 +31,7 @@ public class DBUser {
             // print success
             System.out.println("User inserted successfully.");
         } catch (Exception e) {
-            System.err.println("[SQL ERROR] occurred while attempting to insert a user into the database. [MSG] -> " + e.getMessage());
+            System.err.println("[SQL ERROR] occurred while attempting to insert a user into the database. [MSG] -> " + e);
         }
     }
     /**
@@ -63,10 +63,10 @@ public class DBUser {
                 String password = rs.getString("password");
                 String email = rs.getString("email");
                 String dateCreated = rs.getString("dateCreated");
-                System.out.printf("ID: %d, Username: %s, Password: %s, Email: %s%n", userID, username, password, email);
+                System.out.printf("ID: %d, Username: %s, Password: %s, Email: %s, Date Created: %s%n", userID, username, password, email, dateCreated);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println("[ERROR] Failed to print users from the User table: " + e);
         }
     }
 }

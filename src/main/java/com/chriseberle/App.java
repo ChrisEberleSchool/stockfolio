@@ -1,24 +1,25 @@
 package com.chriseberle;
 
 //javafx imports
-import javafx.event.EventHandler;
-// database includes
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-// local imports
-import com.chriseberle.db.H2Database;
 import com.chriseberle.db.DBTableMethods.DBUser;
+import com.chriseberle.db.H2Database;
 import com.chriseberle.utils.SceneManager;
 import com.chriseberle.utils.StageManager;
+
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class App extends Application {
 
-    Connection dbConnection;
+    static Connection dbConnection;
 
     /**
      * The start method is the entry point for JavaFX applications.
@@ -28,17 +29,24 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws SQLException 
     {
-        //initialize the database
-        H2Database.initializeDatabase();
-        // get a reference to the database conenction
-        dbConnection = H2Database.getConnection(); 
-     
+    
         // set the default stage settings
         StageManager.setLockedWindowSettings(stage);
         // initialize the scene manager
         SceneManager.init(stage);
         // set the entry scene
         SceneManager.switchScene(SceneManager.getEntrySceneKey());
+
+        // create database after stage has been made
+        String JDBC_URL = "jdbc:h2:./target/db/mainDB";
+        String USERNAME = "";
+        String PASSWORD = "";
+        ArrayList<String> sqlFiles = new ArrayList<String>();
+        sqlFiles.add("db/stockfolioDDL.sql");
+
+        H2Database.createDatabase(JDBC_URL, USERNAME, PASSWORD, sqlFiles);
+        dbConnection = DriverManager.getConnection(JDBC_URL);
+        H2Database.shutdownHandlerJavaFX(dbConnection, stage);
 
         // key events listener
         SceneManager.getCurrentScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -63,6 +71,9 @@ public class App extends Application {
             }
         });
     }
+
+
+
     /**
      * The main() method is ignored in correctly deployed JavaFX application.
      * main() serves only as fallback in case the application can not be launched
@@ -70,9 +81,11 @@ public class App extends Application {
      * NetBeans ignores main().
      * @param args the command line arguments
      */
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         launch(args);
     }
+
+    
 
 }
