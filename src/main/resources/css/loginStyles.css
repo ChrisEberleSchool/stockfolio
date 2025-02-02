@@ -1,0 +1,51 @@
+.parent {
+    -fx-background-color: rgba(255,255,255,1);
+    -fx-background-radius: 30px;
+}
+
+.sidebar {
+    -fx-background-color: linear-gradient(to right, #5ba24bb1,#70a265b1, white);
+}
+
+.sidebar_opt {
+    -fx-fill: #f3f3f3;
+    -fx-opacity: 0.5;
+    transition: -fx-fill 0.3s ease, -fx-opacity 0.3s ease;
+}
+
+.sidebar_opt:hover {
+    -fx-fill: #000000; /* Black color */
+    -fx-opacity: 1; /* Optional: change opacity on hover */
+}
+.pane {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 0px 0px 30px 30px;
+}
+
+.colored_portfolio
+{
+    -fx-background-color: linear-gradient(to right, #57cb3c,#71906a);
+    -fx-background-radius: 10px;
+}
+
+.input-box {
+    -fx-background-color: rgba(255,255,255,0);
+    -fx-border-radius: 5px;
+    -fx-border-color: rgba(255,0,0,1);
+    -fx-border-radius: 40px;
+    -fx-pref-width: 200px;   /* Sets preferred width */
+    -fx-pref-height: 40px;    /* Sets preferred height */
+    -fx-min-width: 50%;     /* Sets minimum width */
+    -fx-max-width: 50%;     /* Sets maximum width */
+    -fx-min-height: 30px;     /* Sets minimum height */
+    -fx-max-height: 50px;     /* Sets maximum height */
+}
+
+.login-label {
+    -fx-text-fill: #000000;
+    -fx-font-family: "Poppins", sans-serif;
+    -fx-font-size: 50px;
+    -fx-font-style: normal;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0px 0px 0px;  /* top right bottom left */
+}

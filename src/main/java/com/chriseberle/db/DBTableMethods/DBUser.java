@@ -69,4 +69,64 @@ public class DBUser {
             System.out.println("[ERROR] Failed to print users from the User table: " + e);
         }
     }
+    /**
+     * Query and print a user from the User table based on the given username.
+     * @param connection the database connection
+     * @param inputUsername the username to search for
+     */
+    public static void printUserByUsername(Connection connection, String inputUsername) {
+        String querySql = "SELECT * FROM \"User\" WHERE username = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(querySql)) {
+            ps.setString(1, inputUsername);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userID = rs.getInt("userID");
+                    String username = rs.getString("username");
+                    String password = rs.getString("password");
+                    String email = rs.getString("email");
+                    String dateCreated = rs.getString("dateCreated");
+                    System.out.printf("ID: %d, Username: %s, Password: %s, Email: %s, Date Created: %s%n", userID, username, password, email, dateCreated);
+                } else {
+                    System.out.println("No user found with username: " + inputUsername);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("[ERROR] Failed to print user from the User table: " + e);
+        }
+    }
+    
+    /**
+     * Check if a user exists in the User table based on the given username.
+     * @param connection the database connection
+     * @param inputUsername the username to search for
+     * @return true if the user exists, false otherwise
+     */
+    public static boolean checkUserLogin(Connection connection, String inputUsername, String inputPassword) {
+        String querySql = "SELECT password FROM \"User\" WHERE username = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(querySql)) {
+            ps.setString(1, inputUsername);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    // Fetch the stored password for the username
+                    String storedPassword = rs.getString("password");
+                    // Compare the input password with the stored password
+                    if (storedPassword.equals(inputPassword)) {
+                        System.out.println("Login successful!");
+                        return true;
+                    } else {
+                        System.out.println("Incorrect password.");
+                        return false;
+                    }
+                } else {
+                    System.out.println("No user found with the username: " + inputUsername);
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("[ERROR] Failed to check user login: " + e);
+            return false;
+        }
+    }
 }

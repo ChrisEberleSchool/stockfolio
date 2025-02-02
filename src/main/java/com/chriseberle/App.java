@@ -2,8 +2,6 @@ package com.chriseberle;
 
 //javafx imports
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -18,8 +16,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
-    static Connection dbConnection;
 
     /**
      * The start method is the entry point for JavaFX applications.
@@ -37,16 +33,18 @@ public class App extends Application {
         // set the entry scene
         SceneManager.switchScene(SceneManager.getEntrySceneKey());
 
-        // create database after stage has been made
-        String JDBC_URL = "jdbc:h2:./target/db/mainDB";
-        String USERNAME = "";
-        String PASSWORD = "";
+        // database initialization
         ArrayList<String> sqlFiles = new ArrayList<String>();
         sqlFiles.add("db/stockfolioDDL.sql");
+        // database creation
+        H2Database.createDatabase("jdbc:h2:./target/db/mainDB", "", "", sqlFiles);
 
-        H2Database.createDatabase(JDBC_URL, USERNAME, PASSWORD, sqlFiles);
-        dbConnection = DriverManager.getConnection(JDBC_URL);
-        H2Database.shutdownHandlerJavaFX(dbConnection, stage);
+        // Register window close event to cleanly shutdown H2 database when app exits
+        stage.setOnCloseRequest(event -> {
+            // Shutdown the database when the application window is closed
+            H2Database.shutdownHandler();
+        });
+
 
         // key events listener
         SceneManager.getCurrentScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -58,14 +56,17 @@ public class App extends Application {
                         break;
                     case A:  
                         System.out.println("DOWN"); 
-                        DBUser.insertUser(dbConnection, "Chris", "123hh", "ceber@bb.com");
+                        DBUser.insertUser(H2Database.getMainThreadConnection(), "Chris", "123hh", "ceber@bb.com");
                         break; 
                     case S:  
                         System.out.println("LEFT"); 
+                        DBUser.printUserByUsername(H2Database.getMainThreadConnection(), "Chris");
                         break;
                     case D: 
                         System.out.println("RIGHT"); 
-                        DBUser.printUsers(dbConnection);
+                        DBUser.printUsers(H2Database.getMainThreadConnection());
+                        break;
+                    default:
                         break;
                 }
             }
