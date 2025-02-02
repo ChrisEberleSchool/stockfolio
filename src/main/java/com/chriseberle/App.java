@@ -1,24 +1,21 @@
 package com.chriseberle;
 
 //javafx imports
-import javafx.event.EventHandler;
-// database includes
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
-// local imports
-import com.chriseberle.db.H2Database;
 import com.chriseberle.db.DBTableMethods.DBUser;
+import com.chriseberle.db.H2Database;
 import com.chriseberle.utils.SceneManager;
 import com.chriseberle.utils.StageManager;
+
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 
 public class App extends Application {
-
-    Connection dbConnection;
 
     /**
      * The start method is the entry point for JavaFX applications.
@@ -28,17 +25,26 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws SQLException 
     {
-        //initialize the database
-        H2Database.initializeDatabase();
-        // get a reference to the database conenction
-        dbConnection = H2Database.getConnection(); 
-     
+    
         // set the default stage settings
         StageManager.setLockedWindowSettings(stage);
         // initialize the scene manager
         SceneManager.init(stage);
         // set the entry scene
         SceneManager.switchScene(SceneManager.getEntrySceneKey());
+
+        // database initialization
+        ArrayList<String> sqlFiles = new ArrayList<String>();
+        sqlFiles.add("db/stockfolioDDL.sql");
+        // database creation
+        H2Database.createDatabase("jdbc:h2:./target/db/mainDB", "", "", sqlFiles);
+
+        // Register window close event to cleanly shutdown H2 database when app exits
+        stage.setOnCloseRequest(event -> {
+            // Shutdown the database when the application window is closed
+            H2Database.shutdownHandler();
+        });
+
 
         // key events listener
         SceneManager.getCurrentScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -50,19 +56,25 @@ public class App extends Application {
                         break;
                     case A:  
                         System.out.println("DOWN"); 
-                        DBUser.insertUser(dbConnection, "Chris", "123hh", "ceber@bb.com");
+                        DBUser.insertUser(H2Database.getMainThreadConnection(), "Chris", "123hh", "ceber@bb.com");
                         break; 
                     case S:  
                         System.out.println("LEFT"); 
+                        DBUser.printUserByUsername(H2Database.getMainThreadConnection(), "Chris");
                         break;
                     case D: 
                         System.out.println("RIGHT"); 
-                        DBUser.printUsers(dbConnection);
+                        DBUser.printUsers(H2Database.getMainThreadConnection());
+                        break;
+                    default:
                         break;
                 }
             }
         });
     }
+
+
+
     /**
      * The main() method is ignored in correctly deployed JavaFX application.
      * main() serves only as fallback in case the application can not be launched
@@ -70,9 +82,11 @@ public class App extends Application {
      * NetBeans ignores main().
      * @param args the command line arguments
      */
-    public static void main(String[] args) 
+    public static void main(String[] args)
     {
         launch(args);
     }
+
+    
 
 }

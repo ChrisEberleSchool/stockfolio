@@ -1,5 +1,7 @@
 package com.chriseberle.controllers;
 
+import com.chriseberle.db.H2Database;
+import com.chriseberle.db.DBTableMethods.DBUser;
 import com.chriseberle.utils.ForumHelper;
 import com.chriseberle.utils.SceneManager;
 import javafx.event.ActionEvent;
@@ -93,15 +95,16 @@ public class LoginController {
          * fields are null or corruption occurs.
          */
         try {
-            if( ForumHelper.validUserername(usernameField.getText()) && 
-                ForumHelper.validPassword(passwordField.getText())
-              ) 
-            { // if so print the success message
-                System.out.println("Successfully Logged in user: " + usernameField.getText());
+            if(DBUser.checkUserLogin(H2Database.getMainThreadConnection(), usernameField.getText(), passwordField.getText())) {
+                //System.out.println("User Logged in: ");
+                DBUser.printUserByUsername(H2Database.getMainThreadConnection(), usernameField.getText());
                 SceneManager.switchScene("Home");
-            } else { // if not print the failure message
+            } 
+    
+            else { // if not print the failure message
                 System.out.println("Failed to login user, Please enter Correct data: " + usernameField.getText());
             }
+            
         }
         catch (Exception err) {
             System.out.println("[ERROR] Could not login: " + err);

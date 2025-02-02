@@ -1,40 +1,112 @@
 package com.chriseberle.db;
 
 //imports
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 
 /**
  * This class provides methods to interact with an H2 database.
+ * 
+ * 
+ * FORMAT:
+ * 
+ * String JDBC_URL = "jdbc:h2:./target/db/testdb";
+ * String USERNAME = "";
+ * String PASSWORD = "";
  */
 public class H2Database {
-
-    // Database connection details
-    private static final String JDBC_URL = "jdbc:h2:./target/db/testdb";
-    private static final String USERNAME = "";
-    private static final String PASSWORD = "";
+    // This will allow multiple connections to the database for seperate threads.
+    public static DBConnectionPool connectionPool;
+    private static final int MAX_CONNECTIONS = 5;
+    // the connection that will be used on the main thread
+    private static Connection mainThreadConnection;
 
     /**
-     * Get a connection to the database.
-     * @return the database connection
-     * @throws SQLException if a database access error occurs
+     * Create a new H2 database.
+     * 
+     * sqlFile FORMAT: "db/file.sql" -> this file must be stored at src/main/resources
+     * 
+     * @param JDBC_URL the JDBC URL
+     * @param DB_USERNAME the database username
+     * @param DB_PASSWORD the database password
+     * @param sqlFiles the SQL files to execute
      */
-    public static Connection getConnection() throws SQLException {
+    public static void createDatabase(String JDBC_URL, String DB_USERNAME, String DB_PASSWORD, ArrayList<String> sqlFiles)
+     {
+        /*
+        *  Initialize a connection pool for the database.
+        *  This will run even if a database already exists
+        */
         try {
-            return DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD);
+            // create a connection pool for the database
+            connectionPool = new DBConnectionPool(JDBC_URL, DB_USERNAME, DB_PASSWORD, MAX_CONNECTIONS);
+            // get a connection from the pool
+            mainThreadConnection = connectionPool.getConnection();
+            // add more connections upon threading if ever
+        }
+        catch (Exception e) {   
+            System.out.println("[CONNECTION ERROR] Failed to get a connection to the H2 Database: " + e.getMessage());
+            // exit early if failed to connect to the database
+            return;
+        }
+
+        // check if the target dir has a database dir. (create it if not) 
+        File dbDirectory = new File("./target/db");
+        if (!dbDirectory.exists()) {
+            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
+            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
+        }
+
+        // check if the database dir has a JDBC mv.db file. (exit if so) 
+        dbDirectory = new File("./target/db/"+JDBC_URL+".mv.db");
+        if (!dbDirectory.exists()) {
+            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
+            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
+        } else {
+            System.out.println("[SQL] Database Already Exists.");
+            return;
+        }
+
+        // read in the database
+        try {
+            Statement stmt = mainThreadConnection.createStatement();
+            for (String file : sqlFiles) {
+                executeSqlFile(stmt, file);
+            }   
         }
         catch (SQLException e) {   
-            System.out.println("[ERROR] Failed to connect to the database: " + e.getMessage());
-            // Rethrow the exception to be handled by the caller
-            throw e;  
+            System.out.println("[SQL ERROR] Failed to create database statement. Database Will Not Created: " + e.getMessage());
+            // exit early if failed to create a statement
+            return;
+        }
+        catch (IOException e) {
+            System.out.println("[SQL ERROR] SQL file not found. Database Will Not Created: " + e.getMessage());
+            // exit early if failed to create a statement
+            return;
+        }
+        System.out.println("Database initialized successfully!");
+    }
+
+    public static void shutdownHandler() {
+        // TODO: Shutdown is not working correctly 
+        try {
+            if (mainThreadConnection != null && !mainThreadConnection.isClosed()) {
+                // return the mainthread connection to the pool
+                connectionPool.returnConnection(mainThreadConnection);
+                // shutdown the connection pool
+                connectionPool.shutdown();
+            }
+        } catch (SQLException e) {
+            System.out.println("[H2 DB] ERROR: Failed to properly clean database upon termination of JavaFX: -> " + e);
         }
     }
 
@@ -46,7 +118,7 @@ public class H2Database {
      * @param sqlFilePath the path to the SQL file
      * @throws IOException if an I/O error occurs
      */
-    public static void executeSqlFile(Statement stmt, String sqlFilePath) throws SQLException, IOException {
+    private static void executeSqlFile(Statement stmt, String sqlFilePath) throws SQLException, IOException {
         // Ensure that the file path is correct and relative to the resources folder
         InputStream inputStream = H2Database.class.getClassLoader().getResourceAsStream(sqlFilePath);
 
@@ -54,8 +126,6 @@ public class H2Database {
         if (inputStream == null) {
             throw new FileNotFoundException("SQL file not found: " + sqlFilePath);
         }
-
-        // TODO: Check if our tables already exist before executing the SQL file
 
         //check if 
         try (BufferedReader br = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -66,32 +136,16 @@ public class H2Database {
             }
             stmt.execute(sql.toString()); // Execute the SQL commands from the file
         } catch (SQLException e) {
-            System.err.println("[SQL] Table already exists.");
+            System.err.println("[SQL] SQL file already exists. Ignoring new Creation.");
         }
     }
 
     /**
-     * Initialize the database by creating tables and inserting data.
+     * Get a connection from the connection pool.
+     * 
+     * @return the connection
      */
-    public static void initializeDatabase() {
-        
-        // Check if the target/db directory exists, and create it if not
-        File dbDirectory = new File("./target/db");
-        if (!dbDirectory.exists()) {
-            dbDirectory.mkdirs();  // This will create the target/db directory if it doesn't exist
-            System.out.println("Directory created: " + dbDirectory.getAbsolutePath());
-        }
-
-        // Initialize the connection and execute setup files
-        try (Connection connection = getConnection()) {
-            Statement stmt = connection.createStatement();
-            
-            // Execute schema.sql (to create tables)
-            executeSqlFile(stmt, "db/stockfolioDDL.sql");
-
-            System.out.println("Database initialized successfully!");
-        } catch (Exception e) {
-            System.out.println("[SQL ERROR] occurred while attempting to initialize the database. [MSG] -> " + e.getMessage());
-        }
+    public static Connection getMainThreadConnection() {
+       return mainThreadConnection;
     }
 }
