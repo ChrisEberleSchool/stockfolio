@@ -11,3 +11,4 @@ com/chriseberle/db/DBConnectionPool.class
 com/chriseberle/controllers/LoginController.class
 com/chriseberle/utils/SceneManager.class
 com/chriseberle/App.class
+com/chriseberle/controllers/tController.class
