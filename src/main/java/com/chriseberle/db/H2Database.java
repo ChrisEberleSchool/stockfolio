@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javafx.stage.Stage;
+
 
 /**
  * This class provides methods to interact with an H2 database.
@@ -96,18 +98,26 @@ public class H2Database {
         System.out.println("Database initialized successfully!");
     }
 
-    public static void shutdownHandler() {
-        // TODO: Shutdown is not working correctly 
-        try {
-            if (mainThreadConnection != null && !mainThreadConnection.isClosed()) {
-                // return the mainthread connection to the pool
-                connectionPool.returnConnection(mainThreadConnection);
-                // shutdown the connection pool
-                connectionPool.shutdown();
+    /*
+     * Calls a listener to the javafx window to 
+     * properly shutdown the database upon
+     * exiting the application.
+    */
+    public static void shutdownHandler(Stage stage) {
+        // Register window close event to cleanly shutdown H2 database when app exits
+        stage.setOnCloseRequest(event -> {
+            // TODO: Shutdown is not working correctly 
+            try {
+                if (mainThreadConnection != null && !mainThreadConnection.isClosed()) {
+                    // return the mainthread connection to the pool
+                    connectionPool.returnConnection(mainThreadConnection);
+                    // shutdown the connection pool
+                    connectionPool.shutdown();
+                }
+            } catch (SQLException e) {
+                System.out.println("[H2 DB] ERROR: Failed to properly clean database upon termination of JavaFX: -> " + e);
             }
-        } catch (SQLException e) {
-            System.out.println("[H2 DB] ERROR: Failed to properly clean database upon termination of JavaFX: -> " + e);
-        }
+        });
     }
 
     /**

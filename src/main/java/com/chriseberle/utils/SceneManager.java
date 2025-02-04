@@ -26,24 +26,24 @@ public class SceneManager {
     /**
      * The entry scene.
      */
-    private static String entrySceneKey;
+    private static String entrySceneKey = "test";
 
     /**
      * Initialize the SceneManager with the primary stage.
      * @param stage the primary stage
      */
-    public static void init(Stage stage) {
+    public static void init() {
         // set the class specific stage instance to the primary stage
-        primaryStage = stage;
+        primaryStage = StageManager.getPrimaryStage();
     
         // Preload scenes
         loadScene("loginRegister", "/fxml/loginRegister.fxml");
         loadScene("Register", "/fxml/register.fxml");
         loadScene("Login", "/fxml/login.fxml");
         loadScene("Home", "/fxml/homePage.fxml");
+        loadScene("test", "/fxml/tPage.fxml");
 
-        // set the entry scene, the scene that will be displayed first
-        entrySceneKey = "loginRegister";
+        SceneManager.switchScene(getEntrySceneKey());
     }
     /**
      * Load a scene from an FXML file.
@@ -75,14 +75,6 @@ public class SceneManager {
         } else {
             throw new RuntimeException("[ERROR] Scene not found: " + name);
         }
-    }
-
-    /**
-     * Get the current scene.
-     * @return the current scene
-     */
-    public static Stage getPrimaryStage() {
-        return primaryStage;
     }
 
     /**

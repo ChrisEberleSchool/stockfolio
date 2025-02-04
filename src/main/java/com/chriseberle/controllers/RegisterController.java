@@ -1,6 +1,10 @@
 package com.chriseberle.controllers;
 
+import com.chriseberle.db.H2Database;
+import com.chriseberle.db.DBTableMethods.DBUser;
 import com.chriseberle.utils.ForumHelper;
+import com.chriseberle.utils.SceneManager;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -130,9 +134,11 @@ public class RegisterController {
                 ForumHelper.validPasswordMatch(passwordField.getText(), confirmPasswordField.getText()) 
               ) 
             { // if so print the success message
+                DBUser.insertUser(H2Database.getMainThreadConnection(), usernameField.getText(), passwordField.getText() , emailField.getText());
                 System.out.println("Successfully Registered user: " + usernameField.getText());
+                SceneManager.switchScene("Home");
             } else { // if not print the failure message
-                System.out.println("Failed to Register user, Please enter Correct data: " + usernameField.getText());
+                System.out.println("Failed to Register user, Please enter Correct Information: ");
             }
         }
         catch (Exception err) {
