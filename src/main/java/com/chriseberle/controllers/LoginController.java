@@ -55,7 +55,7 @@ public class LoginController {
         // USER LISTENER
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (ForumHelper.validUserername(newValue)) {
+            if (ForumHelper.validUserernameLogin(newValue)) {
                 // set the status image to check
                 setStatusImage(userStatusImageView, true);
             } else {

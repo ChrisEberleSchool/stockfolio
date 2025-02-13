@@ -3,6 +3,9 @@ package com.chriseberle.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.chriseberle.db.H2Database;
+import com.chriseberle.db.DBTableMethods.DBUser;
+
 
 /**
  * Methods related to forum logic
@@ -27,10 +30,39 @@ public class ForumHelper {
      * @param user The user to check.
      * @return true if the user matches a valid pattern, false otherwise.
      */
-    public static boolean validUserername(String user) {
+    public static boolean validUserernameRegister(String user) {
         Pattern pattern = Pattern.compile("^[A-Za-z0-9-_]{4,15}$");
         Matcher matcher = pattern.matcher(user);
-        return matcher.matches();
+        //check if there username already exists
+        if(DBUser.doesUsernameExist(H2Database.getMainThreadConnection(), user)) {
+            System.out.println("[Username Error] Username already exists in the database.");
+            return false;
+        }
+        if(matcher.matches()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * This method checks if the user matches the valid pattern.
+     *
+     * @param user The user to check.
+     * @return true if the user matches a valid pattern, false otherwise.
+     */
+    public static boolean validUserernameLogin(String user) {
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9-_]{4,15}$");
+        Matcher matcher = pattern.matcher(user);
+      
+        //check if there username already exists
+        if(!DBUser.doesUsernameExist(H2Database.getMainThreadConnection(), user)) {
+            System.out.println("[Username Error] Username does not exist in the database.");
+            return false;
+        }
+        if(matcher.matches()) {
+            return true;
+        }
+        return false;
     }
 
     /**
