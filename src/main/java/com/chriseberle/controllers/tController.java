@@ -44,7 +44,6 @@ public class tController {
         double topsideMargin = 0;
         double bottomsideMargin = 0;
 
-        
         AnchorPane.setTopAnchor(innerAnchorPane, topsideMargin);    
         AnchorPane.setLeftAnchor(innerAnchorPane, leftsideMargin);   
         AnchorPane.setRightAnchor(innerAnchorPane, rightsideMargin);  

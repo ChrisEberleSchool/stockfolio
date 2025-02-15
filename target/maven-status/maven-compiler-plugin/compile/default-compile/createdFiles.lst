@@ -1,12 +1,11 @@
 com/chriseberle/utils/ForumHelper.class
 com/chriseberle/db/H2Database.class
 com/chriseberle/db/DBTableMethods/DBUser.class
-com/chriseberle/App$2.class
 com/chriseberle/controllers/HomeController.class
+com/chriseberle/controllers/tController$1.class
 com/chriseberle/controllers/LoginRegisterController.class
 com/chriseberle/controllers/RegisterController.class
 com/chriseberle/utils/StageManager.class
-com/chriseberle/App$1.class
 com/chriseberle/db/DBConnectionPool.class
 com/chriseberle/controllers/LoginController.class
 com/chriseberle/utils/SceneManager.class

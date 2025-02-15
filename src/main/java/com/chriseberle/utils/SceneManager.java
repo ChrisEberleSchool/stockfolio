@@ -26,7 +26,7 @@ public class SceneManager {
     /**
      * The entry scene.
      */
-    private static String entrySceneKey = "test";
+    private static String entrySceneKey = "loginRegister";
 
     /**
      * Initialize the SceneManager with the primary stage.
@@ -42,6 +42,10 @@ public class SceneManager {
         loadScene("Login", "/fxml/login.fxml");
         loadScene("Home", "/fxml/homePage.fxml");
         loadScene("test", "/fxml/tPage.fxml");
+        // home scenes
+        loadScene("CreatePortfolio", "/fxml/createPortfolioPage.fxml");
+        loadScene("PortfolioGraph", "/fxml/portfolioGraphPage.fxml");
+        loadScene("Settings", "/fxml/settingsPage.fxml");
 
         SceneManager.switchScene(getEntrySceneKey());
     }

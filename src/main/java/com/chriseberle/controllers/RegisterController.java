@@ -75,7 +75,7 @@ public class RegisterController {
         // USER LISTENER
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> {
             // Validate the email format
-            if (ForumHelper.validUserername(newValue)) {
+            if (ForumHelper.validUserernameRegister(newValue)) {
                 // set the status image to check
                 setStatusImage(userStatusImageView, true);
             } else {
@@ -129,14 +129,14 @@ public class RegisterController {
          */
         try {
             if( ForumHelper.validEmail(emailField.getText()) && 
-                ForumHelper.validUserername(usernameField.getText()) && 
+                ForumHelper.validUserernameRegister(usernameField.getText()) && 
                 ForumHelper.validPassword(passwordField.getText()) && 
                 ForumHelper.validPasswordMatch(passwordField.getText(), confirmPasswordField.getText()) 
               ) 
             { // if so print the success message
                 DBUser.insertUser(H2Database.getMainThreadConnection(), usernameField.getText(), passwordField.getText() , emailField.getText());
                 System.out.println("Successfully Registered user: " + usernameField.getText());
-                SceneManager.switchScene("Home");
+                SceneManager.switchScene("Login");
             } else { // if not print the failure message
                 System.out.println("Failed to Register user, Please enter Correct Information: ");
             }

@@ -129,4 +129,30 @@ public class DBUser {
             return false;
         }
     }
+
+    /**
+    * Check if a user with the given username exists in the User table.
+    * @param connection the database connection
+    * @param username the username to check
+    * @return true if the username exists, false otherwise
+    */
+    public static boolean doesUsernameExist(Connection connection, String username) {
+        String querySql = "SELECT 1 FROM \"User\" WHERE username = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(querySql)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                // If a result is found, the username exists
+                if (rs.next()) {
+                    return true;
+                } else {
+                    // No result means the username doesn't exist
+                    return false;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[SQL ERROR] Failed to check if username exists: " + e);
+            return false;
+        }
+    }
 }
